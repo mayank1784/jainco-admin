@@ -2,7 +2,8 @@ import React from 'react'
 import { useState, useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import _ from 'lodash'
-import { getFunctions, httpsCallable } from 'firebase/functions'
+import { httpsCallable } from 'firebase/functions'
+import { functions } from '../../services/firebase'
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb'
 import CheckboxFive from '../../components/Checkboxes/CheckboxFive'
 import CheckboxFour from '../../components/Checkboxes/CheckboxFour'
@@ -27,6 +28,7 @@ const CreateUsersForm = () => {
 		formState: { errors },
 		handleSubmit,
 		watch,
+		reset,
 	} = useForm({ mode: 'all' })
 	const [isLoading, setIsLoading] = useState(false)
 	const onSubmit = async (data) => {
@@ -38,22 +40,14 @@ const CreateUsersForm = () => {
 			processedData = _.mapValues(processedData, (value, key) => {
 				return key === 'password' ? value : _.toLower(value)
 			})
-
-			const functions = getFunctions()
-
-			// Call the Firestore function
-			const createUsersFunction = httpsCallable(functions, 'createUsers')
-
-			Object.assign(processedData, {
-				role: 'admin',
-			})
 			console.log(processedData)
 
-			const result = await createUsersFunction({
-				users: [processedData],
-			})
+			// Call the Firestore function
+			const createAdminFunction = httpsCallable(functions, 'createAdmin')
 
-			console.log(result.data)
+			const result = await createAdminFunction(processedData)
+
+			console.log('result', result)
 			setIsLoading(false)
 			toast.success('User Created', {
 				position: 'top-center',
@@ -65,6 +59,7 @@ const CreateUsersForm = () => {
 				progress: undefined,
 				theme: 'light',
 			})
+			reset()
 		} catch (error) {
 			console.log(error)
 			setIsLoading(false)
@@ -146,7 +141,7 @@ const CreateUsersForm = () => {
 										Mobile No.
 									</label>
 									<input
-										{...register('contactDetails', {
+										{...register('mobileNo', {
 											required: 'Mobile is Required...',
 											minLength: {
 												value: 10,
@@ -167,10 +162,10 @@ const CreateUsersForm = () => {
 										placeholder="Mobile Number (10 digits without space)"
 										className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
 									/>
-									{typeof errors.contactDetails?.message ===
+									{typeof errors.mobileNo?.message ===
 										'string' && (
 										<span className="text-red-600">
-											{errors.contactDetails?.message}
+											{errors.mobileNo?.message}
 										</span>
 									)}
 								</div>

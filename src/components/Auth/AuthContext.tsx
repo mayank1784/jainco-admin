@@ -36,7 +36,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 				(adminDataSnapshot) => {
 					if (adminDataSnapshot.exists()) {
 						// Update adminData with the latest data
-						setAdminData(adminDataSnapshot.data())
+						setAdminData({
+							id: adminDataSnapshot.id,
+							...adminDataSnapshot.data(),
+						})
 					}
 				}
 			)

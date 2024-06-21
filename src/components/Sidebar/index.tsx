@@ -68,9 +68,13 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 				<NavLink to="/">
 					<div className="flex flex-row justify-start-start gap-2 items-center">
 						<div className="rounded-full h-14 w-14 flex relative overflow-hidden bg-white p-1">
-						<img src={Logo} alt="JD" className='w-12 h-10' /></div>
-					<div className='text-center justify-center items-center text-title-lg text-white dark:text-black font-bold'>Jainco Decor</div>
-				{/* <img src={Logo} alt="" /> */}</div>
+							<img src={Logo} alt="JD" className="w-12 h-10" />
+						</div>
+						<div className="text-center justify-center items-center text-title-lg text-white font-bold">
+							Jainco Decor
+						</div>
+						{/* <img src={Logo} alt="" /> */}
+					</div>
 				</NavLink>
 
 				<button

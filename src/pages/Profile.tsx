@@ -27,9 +27,9 @@ const Profile = () => {
 	const { user, adminData } = useAuth()
 	const [isLoading, setIsLoading] = useState(false)
 	const [selectedValue, setSelectedValue] = useState(adminData?.city || 'DL')
-	const [name, setName] = useState(adminData?.adminName || 'admin')
+	const [name, setName] = useState(adminData?.name || 'admin')
 	const [contactDetails, setContactDetails] = useState(
-		adminData?.contactDetails || '98xxxxxxxx'
+		adminData?.mobileNo || '98xxxxxxxx'
 	)
 	const [address, setAddress] = useState(adminData?.address || 'DL')
 	const [uploadProgress, setUploadProgress] = useState(0)
@@ -58,15 +58,17 @@ const Profile = () => {
 
 		setIsEditing(false)
 		const data = {
-			adminName: name.toLowerCase(),
-			contactDetails: contactDetails,
+			name: name.toLowerCase(),
+			mobileNo: contactDetails,
 			address: address.toLowerCase(),
 			city: selectedValue.toLowerCase(),
 		}
-		const docRef = doc(db, 'admins', adminData.adminID)
-		// updateDoc(docRef, data).then((docRef) => console.log('updated'))
+		const docRef = doc(db, 'users', adminData.id)
+
 		await setDoc(docRef, data, { merge: true })
+
 		console.log('updated')
+
 		setIsLoading(false)
 		toast.success('Updated', {
 			position: 'top-center',
@@ -152,7 +154,7 @@ const Profile = () => {
 							// Use Firestore to update the data
 
 							setDoc(
-								doc(db, 'admins', adminData.adminID),
+								doc(db, 'users', adminData.id),
 								{
 									profilePhoto: downloadURL,
 								},
@@ -1528,16 +1530,11 @@ const Profile = () => {
 						</div>
 					</div>
 					<div className="mt-4">
-						<h3 className="mb-1.5 text-2xl font-semibold text-black dark:text-white">
-							{adminData && adminData.profilePhoto
-								? adminData.adminName
-										.toLowerCase()
-										.replace(
-											/(?:^|\s)\w/g,
-											(match: string) =>
-												match.toUpperCase()
-										)
-								: 'Admin'}
+						<h3 className="mb-1.5 text-2xl font-semibold text-black dark:text-white capitalize">
+							{/* {adminData && adminData.profilePhoto
+								? adminData.name
+								: 'Admin'} */}
+							{adminData?.name || 'Admin'}
 						</h3>
 						<p className="font-medium">Admin</p>
 
@@ -1571,11 +1568,11 @@ const Profile = () => {
 												setName(e.target.value)
 											}
 											placeholder={
-												adminData && adminData.adminName
-													? adminData.adminName
+												adminData && adminData.name
+													? adminData.name
 													: 'Not fetched'
 											}
-											className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+											className="w-full capitalize rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
 											disabled={!isEditMode}
 										/>
 									</div>
@@ -1606,9 +1603,8 @@ const Profile = () => {
 												)
 											}
 											placeholder={
-												adminData &&
-												adminData.contactDetails
-													? adminData.contactDetails
+												adminData && adminData.mobileNo
+													? adminData.mobileNo
 													: 'NA'
 											}
 											className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
@@ -1644,7 +1640,7 @@ const Profile = () => {
 													? adminData.address
 													: 'NA'
 											}
-											className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"></textarea>
+											className="w-full capitalize rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"></textarea>
 									</div>
 									{/* <div className="mb-6">
 										<label className="mb-2.5 block text-black dark:text-white text-left">

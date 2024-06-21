@@ -7,7 +7,7 @@ import {
 	signOut,
 } from 'firebase/auth'
 import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore'
-import { getFunctions, connectFunctionsEmulator } from 'firebase/functions'
+import { getFunctions, connectFunctionsEmulator, httpsCallable } from 'firebase/functions'
 import firebaseConfig from './firebaseConfig'
 import { getStorage, connectStorageEmulator } from 'firebase/storage'
 const app = initializeApp(firebaseConfig)
@@ -26,6 +26,7 @@ connectFirestoreEmulator(db, 'localhost', 8080)
 
 const functions = getFunctions(app)
 connectFunctionsEmulator(functions, 'localhost', 5001)
+console.log(firebaseConfig)
 
 export {
 	app,

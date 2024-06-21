@@ -69,13 +69,8 @@ const DropdownUser = () => {
 				to="#">
 				{adminData && (
 					<span className="hidden text-right lg:block">
-						<span className="block text-sm font-medium text-black dark:text-white">
-							{adminData.adminName &&
-								adminData.adminName
-									.toLowerCase()
-									.replace(/(?:^|\s)\w/g, (match: string) =>
-										match.toUpperCase()
-									)}
+						<span className="block capitalize text-sm font-medium text-black dark:text-white">
+							{adminData?.name}
 						</span>
 						<span className="block text-xs">Admin</span>
 					</span>
