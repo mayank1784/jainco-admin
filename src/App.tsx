@@ -16,6 +16,7 @@ import FormLayout from './pages/Form/FormLayout'
 import Profile from './pages/Profile'
 import Settings from './pages/Settings'
 import Tables from './pages/Tables'
+import AddProduct from './pages/Add_Product'
 import Alerts from './pages/UiElements/Alerts'
 import Buttons from './pages/UiElements/Buttons'
 import PrivateRoute from './components/Auth/PrivateRoute'
@@ -119,6 +120,17 @@ function App() {
 						<>
 							<PageTitle title="Tables | Jainco Decor" />
 							<Tables />
+						</>
+					</PrivateRoute>
+				}
+			/>
+			<Route
+				path="/addProduct"
+				element={
+					<PrivateRoute>
+						<>
+							<PageTitle title="Add Products | Jainco Decor" />
+							<AddProduct/>
 						</>
 					</PrivateRoute>
 				}
