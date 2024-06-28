@@ -69,6 +69,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 				const isAdmin = !!tokenResult?.claims?.admin
 				if (isAdmin) {
 					setUser(authUser)
+					console.log('user after logging', user)
 					await fetchAdminData(authUser.uid)
 				} else {
 					setUser(null)
