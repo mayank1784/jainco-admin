@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
 	getStorage,
 	ref,
@@ -15,6 +15,7 @@ interface ImageUploadProps {
 	mandatory?: boolean
 	onUploadComplete: (url: string) => void
 	onDelete: () => void
+	reset: boolean
 }
 
 const ImageUpload: React.FC<ImageUploadProps> = ({
@@ -22,10 +23,19 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
 	mandatory = false,
 	onUploadComplete,
 	onDelete,
+	reset,
 }) => {
 	const [uploadProgress, setUploadProgress] = useState<number>(0)
 	const [uploading, setUploading] = useState<boolean>(false)
 	const [imageUrl, setImageUrl] = useState<string | null>(null)
+
+	useEffect(() => {
+		if (reset) {
+			setImageUrl(null)
+			setUploadProgress(0)
+			setUploading(false)
+		}
+	}, [reset])
 
 	const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (e.target.files && e.target.files[0]) {
@@ -131,6 +141,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
 							className="h-35 w-35 sm:h-40 sm:w-40 object-contain border p-1 bg-slate-300 border-dotted border-form-strokedark"
 						/>
 						<button
+							type="button"
 							onClick={handleDelete}
 							className="absolute hover:bg-opacity-80 top-0 right-0 bg-red-500 text-white rounded-full p-1 z-9999 w-4 h-4 flex items-center justify-center overflow-hidden">
 							&times;

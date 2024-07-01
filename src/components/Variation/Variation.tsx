@@ -1,22 +1,20 @@
 import React, { useContext, useRef, useState } from 'react'
-import { VariationContext } from './VariationContext'
+import { VariationContext, getStringOrFirstElement } from './VariationContext'
 import _ from 'lodash'
 
 const Variation: React.FC = () => {
 	const { variationValues, setVariationValues } = useContext(VariationContext)
 	const variationTitleRef = useRef<HTMLInputElement>(null)
 	const [variationTitle, setVariationTitle] = useState<string>('')
-	const [variationTitleList, setVariationTitleList] = useState<string[]>([])
 	const [newVariationValue, setNewVariationValue] = useState<{
 		[key: string]: string
 	}>({})
 
 	const handleAddVariationTitle = () => {
-		if (variationTitle && !variationTitleList.includes(variationTitle)) {
-			setVariationTitleList((prev) => [
-				...prev,
-				_.toLower(variationTitle),
-			])
+		if (
+			variationTitle &&
+			!Object.keys(variationValues).includes(variationTitle)
+		) {
 			setVariationValues((prev) => ({
 				...prev,
 				[_.toLower(variationTitle)]: [],
@@ -61,10 +59,6 @@ const Variation: React.FC = () => {
 			delete updatedVariationValues[title] // Delete the property
 
 			setVariationValues(updatedVariationValues)
-			const updatedVariationTitleList = variationTitleList.filter(
-				(item) => item !== title
-			)
-			setVariationTitleList(updatedVariationTitleList)
 		}
 	}
 
@@ -108,7 +102,7 @@ const Variation: React.FC = () => {
 					</button>
 				</div>
 			</div>
-			{variationTitleList.map((variationTitle, index) => (
+			{Object.keys(variationValues).map((variationTitle, index) => (
 				<div
 					key={`${index}_${variationTitle}`}
 					className="grid sm:grid-cols-2 grid-cols-1 gap-2">
@@ -159,29 +153,38 @@ const Variation: React.FC = () => {
 					</div>
 					<div className="flex flex-wrap gap-2">
 						{variationValues[variationTitle] &&
-							variationValues[variationTitle].map((value) => (
-								<div
-									className="relative"
-									key={`${value}_${Date.now()}`}>
-									<p
-										key={JSON.stringify(value)}
-										className="bg-zinc-400 text-black rounded-xl px-4 py-1 text-sm dark:bg-zinc-50">
-										{value}
-									</p>
+							variationValues[variationTitle].map((value) => {
+								const key = getStringOrFirstElement(value)
+
+								return (
 									<div
-										onClick={() => {
-											setVariationValues((prev) => ({
-												...prev,
-												[variationTitle]: prev[
-													variationTitle
-												].filter((v) => v !== value),
-											}))
-										}}
-										className="cursor-pointer absolute top-0 right-1 h-3 w-3 rounded-full bg-red-500 flex justify-center items-center hover:bg-opacity-60 lowercasebg-red-500 text-white p-1">
-										&times;
+										className="relative"
+										key={`${key}_${Date.now()}`}>
+										<p
+											key={key}
+											className="bg-zinc-400 text-black rounded-xl px-4 py-1 text-sm dark:bg-zinc-50">
+											{key}
+										</p>
+										<div
+											onClick={() => {
+												setVariationValues((prev) => ({
+													...prev,
+													[variationTitle]: prev[
+														variationTitle
+													].filter(
+														(v) =>
+															getStringOrFirstElement(
+																v
+															) !== key
+													),
+												}))
+											}}
+											className="cursor-pointer absolute top-0 right-1 h-3 w-3 rounded-full bg-red-500 flex justify-center items-center hover:bg-opacity-60 lowercasebg-red-500 text-white p-1">
+											&times;
+										</div>
 									</div>
-								</div>
-							))}
+								)
+							})}
 					</div>
 				</div>
 			))}
