@@ -40,7 +40,11 @@ const transformVariationObject = (
 	})
 }
 
-const VariationTable: React.FC = () => {
+interface VariationTableProps {
+	mainImage: string
+}
+
+const VariationTable: React.FC<VariationTableProps> = ({ mainImage }) => {
 	const {
 		variationValues,
 		unavailableCombinations,
@@ -112,11 +116,11 @@ const VariationTable: React.FC = () => {
 									<td className="w-15 flex-shrink-0 px-4 py-2">
 										{index + 1}
 									</td>
-									<td className="w-20 flex-shrink-0 px-1 py-2 flex justify-center items-center border">
+									<td className="w-20 flex-shrink-0 px-1 py-2 flex justify-center items-center ">
 										<img
-											src="https://www.urbanspacestore.in/cdn/shop/products/A1LtPqnQJNL._AC_SL1500.jpg"
+											src={mainImage}
 											alt="Image"
-											className="cover border"
+											className="cover"
 										/>
 									</td>
 									{columns.map((col, colIndex) => (

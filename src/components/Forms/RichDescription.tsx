@@ -83,10 +83,8 @@ const RichDescription: React.FC<RichDescriptionProps> = ({
 						formats={formats}
 						value={field.value}
 						onChange={handleProcedureContentChange}
-                        placeholder={
-                            'Description of the product'
-                        }
-                        className="h-20 sm:mb-9 mb-15"
+						placeholder={'Description of the product'}
+						className="h-20 sm:mb-9 mb-15"
 					/>
 				)}
 			/>

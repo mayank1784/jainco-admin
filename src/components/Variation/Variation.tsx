@@ -1,6 +1,7 @@
 import React, { useContext, useRef, useState } from 'react'
 import { VariationContext, getStringOrFirstElement } from './VariationContext'
 import _ from 'lodash'
+import ImageUpload from '../ImageUpload/ImageUpload'
 
 const Variation: React.FC = () => {
 	const { variationValues, setVariationValues } = useContext(VariationContext)
@@ -151,7 +152,8 @@ const Variation: React.FC = () => {
 							Delete
 						</button>
 					</div>
-					<div className="flex flex-wrap gap-2">
+
+					<div className="flex flex-wrap gap-2 ">
 						{variationValues[variationTitle] &&
 							variationValues[variationTitle].map((value) => {
 								const key = getStringOrFirstElement(value)

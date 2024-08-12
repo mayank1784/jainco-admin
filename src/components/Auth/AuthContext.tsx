@@ -66,6 +66,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 			console.log('auth state changed')
 			if (authUser) {
 				const tokenResult = await authUser?.getIdTokenResult()
+
 				const isAdmin = !!tokenResult?.claims?.admin
 				if (isAdmin) {
 					setUser(authUser)

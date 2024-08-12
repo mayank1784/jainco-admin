@@ -13,7 +13,7 @@ import RichDescription from '../components/Forms/RichDescription'
 import Variation from '../components/Variation/Variation'
 import { VariationContext } from '../components/Variation/VariationContext'
 import VariationTable from '../components/Tables/VariationTable'
-import { collection, addDoc } from 'firebase/firestore'
+import { collection, addDoc, Timestamp } from 'firebase/firestore'
 import { db } from '../services/firebase'
 
 interface ProductDetails {
@@ -109,7 +109,10 @@ const ProductForm: React.FC = () => {
 					: {}),
 				mainImage: mainImageUrl,
 				variations: variationValues,
-				unavailableCombinations: unavailableCombinations,
+				...(unavailableCombinations.length > 0
+					? { unavailableCombinations: unavailableCombinations }
+					: {}),
+				createdAt: Timestamp.fromDate(new Date()),
 			}
 			console.log('Final Product Data:', finalProductData)
 			const docRef = await addDoc(
@@ -329,7 +332,7 @@ const ProductForm: React.FC = () => {
 								</div>
 
 								<Variation />
-								<VariationTable />
+								<VariationTable mainImage={mainImageUrl} />
 							</div>
 						</div>
 					</form>
