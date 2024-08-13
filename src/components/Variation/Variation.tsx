@@ -1,10 +1,17 @@
 import React, { useContext, useRef, useState } from 'react'
-import { VariationContext, getStringOrFirstElement } from './VariationContext'
+
 import _ from 'lodash'
-import ImageUpload from '../ImageUpload/ImageUpload'
+
+import { VariationContext } from './VariationContext'
 
 const Variation: React.FC = () => {
-	const { variationValues, setVariationValues } = useContext(VariationContext)
+	const {
+		variationType,
+		setVariationType,
+		variationTypesList,
+		setVariationTypesList,
+	} = useContext(VariationContext)
+
 	const variationTitleRef = useRef<HTMLInputElement>(null)
 	const [variationTitle, setVariationTitle] = useState<string>('')
 	const [newVariationValue, setNewVariationValue] = useState<{
@@ -12,15 +19,17 @@ const Variation: React.FC = () => {
 	}>({})
 
 	const handleAddVariationTitle = () => {
-		if (
-			variationTitle &&
-			!Object.keys(variationValues).includes(variationTitle)
-		) {
-			setVariationValues((prev) => ({
-				...prev,
-				[_.toLower(variationTitle)]: [],
-			}))
+		if (variationTitle && !variationType.includes(variationTitle)) {
+			const lowercaseTitle = _.toLower(variationTitle)
+			setVariationType((prev) => [...prev, lowercaseTitle])
+
 			setVariationTitle('')
+			setVariationTypesList((prev) => {
+				return {
+					...prev,
+					[variationTitle]: [],
+				}
+			})
 
 			setTimeout(() => {
 				if (variationTitleRef.current) {
@@ -41,11 +50,14 @@ const Variation: React.FC = () => {
 	}
 
 	const handleAddVariationValue = (title: string, value: string) => {
-		if (value && !variationValues[title].includes(value)) {
-			setVariationValues((prev) => ({
-				...prev,
-				[title]: [...prev[title], _.toLower(value)],
-			}))
+		if (value && !variationTypesList[variationTitle]?.includes(value)) {
+			setVariationTypesList((prev) => {
+				return {
+					...prev,
+					[title]: [...prev[title], value],
+				}
+			})
+
 			setNewVariationValue((prev) => ({
 				...prev,
 				[title]: '',
@@ -54,12 +66,16 @@ const Variation: React.FC = () => {
 	}
 
 	const handleDeleteVariationValue = (title: string) => {
-		if (variationValues[title]) {
-			const updatedVariationValues = { ...variationValues } // Create a copy
+		if (variationTypesList[title]) {
+			const updatedVariationValues = { ...variationTypesList } // Create a copy
 
 			delete updatedVariationValues[title] // Delete the property
+			const updatedVariationType = variationType.filter(
+				(varTitle) => varTitle !== title
+			)
+			setVariationType(updatedVariationType)
 
-			setVariationValues(updatedVariationValues)
+			setVariationTypesList(updatedVariationValues)
 		}
 	}
 
@@ -103,7 +119,8 @@ const Variation: React.FC = () => {
 					</button>
 				</div>
 			</div>
-			{Object.keys(variationValues).map((variationTitle, index) => (
+
+			{variationType.map((variationTitle, index) => (
 				<div
 					key={`${index}_${variationTitle}`}
 					className="grid sm:grid-cols-2 grid-cols-1 gap-2">
@@ -154,9 +171,9 @@ const Variation: React.FC = () => {
 					</div>
 
 					<div className="flex flex-wrap gap-2 ">
-						{variationValues[variationTitle] &&
-							variationValues[variationTitle].map((value) => {
-								const key = getStringOrFirstElement(value)
+						{variationTypesList[variationTitle] &&
+							variationTypesList[variationTitle].map((value) => {
+								const key = value
 
 								return (
 									<div
@@ -169,17 +186,41 @@ const Variation: React.FC = () => {
 										</p>
 										<div
 											onClick={() => {
-												setVariationValues((prev) => ({
-													...prev,
-													[variationTitle]: prev[
-														variationTitle
-													].filter(
-														(v) =>
-															getStringOrFirstElement(
-																v
-															) !== key
-													),
-												}))
+												setVariationTypesList(
+													(prev) => {
+														// Get the current list associated with the variationTitle
+														const currentList =
+															prev[
+																variationTitle
+															] || []
+
+														// Filter out the item that matches the key
+														const updatedList =
+															currentList.filter(
+																(v) => v !== key
+															)
+
+														// If the updated list is empty, remove the key from the object
+														if (
+															updatedList.length ===
+															0
+														) {
+															const {
+																[variationTitle]:
+																	_,
+																...remaining
+															} = prev
+															return remaining
+														}
+
+														// Otherwise, update the state with the new list
+														return {
+															...prev,
+															[variationTitle]:
+																updatedList,
+														}
+													}
+												)
 											}}
 											className="cursor-pointer absolute top-0 right-1 h-3 w-3 rounded-full bg-red-500 flex justify-center items-center hover:bg-opacity-60 lowercasebg-red-500 text-white p-1">
 											&times;

@@ -1,7 +1,7 @@
 import Breadcrumb from '../components/Breadcrumbs/Breadcrumb'
 import DefaultLayout from '../layout/DefaultLayout'
 import _ from 'lodash'
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { SingleValue } from 'react-select'
 import CategorySelect from '../components/Forms/SelectGroup/CategorySelect'
 
@@ -11,14 +11,15 @@ import { toast } from 'react-toastify'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import RichDescription from '../components/Forms/RichDescription'
 import Variation from '../components/Variation/Variation'
-import { VariationContext } from '../components/Variation/VariationContext'
-import VariationTable from '../components/Tables/VariationTable'
-import { collection, addDoc, Timestamp } from 'firebase/firestore'
-import { db } from '../services/firebase'
 
-interface ProductDetails {
-	[key: string]: string | {} | [] | number
-}
+import { useVariationContext } from '../components/Variation/VariationContext' 
+
+import VariationTable from '../components/Tables/VariationTable'
+
+import { addProduct } from '../services/functions'
+import { ProductData } from '../types/product'
+
+
 
 const ProductForm: React.FC = () => {
 	const {
@@ -39,12 +40,8 @@ const ProductForm: React.FC = () => {
 		'',
 		'',
 	])
-	const {
-		variationValues,
-		setVariationValues,
-		unavailableCombinations,
-		setUnavailableCombinations,
-	} = useContext(VariationContext)
+	const {variations, setVariationType, setVariationTypesList, setVariations, variationTypesList} = useVariationContext()
+
 
 	const handleMainImageUpload = (url: string) => {
 		setMainImageUrl(url)
@@ -89,7 +86,7 @@ const ProductForm: React.FC = () => {
 		}
 	}, [resetImageUpload])
 
-	const onSubmit: SubmitHandler<ProductDetails> = async (data) => {
+	const onSubmit: SubmitHandler<any> = async (data) => {
 		if (mainImageUrl === '' /* replace with condition */) {
 			console.log('main image not present')
 			toast.error('Main image is mandatory.')
@@ -97,41 +94,27 @@ const ProductForm: React.FC = () => {
 		}
 		try {
 			setFormSubmittting(true)
-			const finalProductData: ProductDetails = {
+			const finalProductData: ProductData = {
 				...data,
-				...(optionalImagesUrls.filter((str) => str.trim().length > 0)
-					.length > 0
-					? {
-							otherImages: optionalImagesUrls.filter(
-								(str) => str.trim().length > 0
-							),
-					  }
-					: {}),
+				otherImages: optionalImagesUrls,
 				mainImage: mainImageUrl,
-				variations: variationValues,
-				...(unavailableCombinations.length > 0
-					? { unavailableCombinations: unavailableCombinations }
-					: {}),
-				createdAt: Timestamp.fromDate(new Date()),
+				variations: variations,
+				variationTypes: variationTypesList
 			}
-			console.log('Final Product Data:', finalProductData)
-			const docRef = await addDoc(
-				collection(db, 'products'),
-				finalProductData
-			)
-			console.log('Document written with ID: ', docRef.id)
+			await addProduct(finalProductData)
+			setResetImageUpload(true)
+			setMainImageUrl('')
+				setOptionalImagesUrls(['', '', ''])
+				setVariationType([])
+				setVariationTypesList({})
+				setVariations([])
+				reset()
+
 		} catch (error) {
 			console.error(error)
-			toast.error(`${JSON.stringify(error)}`)
 		} finally {
-			setResetImageUpload(true)
-			setFormSubmittting(false)
-			toast.success('Product Uploaded')
-			setMainImageUrl('')
-			setOptionalImagesUrls(['', '', ''])
-			setVariationValues({})
-			setUnavailableCombinations([])
-			reset()
+				setFormSubmittting(false)
+				
 		}
 	}
 

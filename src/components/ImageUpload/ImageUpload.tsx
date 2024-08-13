@@ -16,6 +16,7 @@ interface ImageUploadProps {
 	onUploadComplete: (url: string) => void
 	onDelete: () => void
 	reset: boolean
+	imageUrl?: string
 }
 
 const ImageUpload: React.FC<ImageUploadProps> = ({
@@ -24,10 +25,11 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
 	onUploadComplete,
 	onDelete,
 	reset,
+	imageUrl:initialImageUrl
 }) => {
 	const [uploadProgress, setUploadProgress] = useState<number>(0)
 	const [uploading, setUploading] = useState<boolean>(false)
-	const [imageUrl, setImageUrl] = useState<string | null>(null)
+	const [imageUrl, setImageUrl] = useState<string | null>(initialImageUrl || null)
 
 	useEffect(() => {
 		if (reset) {
