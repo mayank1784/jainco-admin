@@ -46,22 +46,22 @@ const ProductForm: React.FC = () => {
 	const handleMainImageUpload = (url: string) => {
 		setMainImageUrl(url)
 	}
-	const handleCategoryChange = (
-		selectedOption: SingleValue<{
-			label: string
-			value: string
-			id: string
-		}>
-	) => {
-		if (selectedOption) {
-			setValue('category', selectedOption.id)
-		} else {
-			setError('category', {
-				type: 'manual',
-				message: 'Please select a category', // Set the error message
-			})
-		}
-	}
+	// const handleCategoryChange = (
+	// 	selectedOption: SingleValue<{
+	// 		label: string
+	// 		value: string
+	// 		id: string
+	// 	}>
+	// ) => {
+	// 	if (selectedOption) {
+	// 		setValue('category', selectedOption.id)
+	// 	} else {
+	// 		setError('category', {
+	// 			type: 'manual',
+	// 			message: 'Please select a category', // Set the error message
+	// 		})
+	// 	}
+	// }
 	const handleDescriptionChange = (content: string) => {
 		setValue('description', content)
 	}
@@ -79,6 +79,11 @@ const ProductForm: React.FC = () => {
 		const newOptionalImagesUrls = [...optionalImagesUrls]
 		newOptionalImagesUrls[index] = ''
 		setOptionalImagesUrls(newOptionalImagesUrls)
+	}
+	const handleCategorySelect = (id: string) => {
+		setValue('category', id)
+		// You can now use this ID in your form submission or other logic
+		console.log("Selected Category ID:", id)
 	}
 	useEffect(() => {
 		if (resetImageUpload) {
@@ -211,7 +216,7 @@ const ProductForm: React.FC = () => {
 										Category
 									</label>
 									<CategorySelect
-										onCategoryChange={handleCategoryChange}
+										onCategorySelect={handleCategorySelect}
 									/>
 									{typeof errors.category?.message ===
 										'string' && (
