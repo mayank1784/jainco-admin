@@ -2,13 +2,13 @@ import Breadcrumb from '../components/Breadcrumbs/Breadcrumb'
 import DefaultLayout from '../layout/DefaultLayout'
 import _ from 'lodash'
 import React, { useState, useEffect } from 'react'
-import { SingleValue } from 'react-select'
+// import { SingleValue } from 'react-select'
 import CategorySelect from '../components/Forms/SelectGroup/CategorySelect'
 
 import ImageUpload from '../components/ImageUpload/ImageUpload'
 
 import { toast } from 'react-toastify'
-import { useForm, SubmitHandler } from 'react-hook-form'
+import { useForm, SubmitHandler, Controller } from 'react-hook-form'
 import RichDescription from '../components/Forms/RichDescription'
 import Variation from '../components/Variation/Variation'
 
@@ -29,6 +29,7 @@ const ProductForm: React.FC = () => {
 		watch,
 		setValue,
 		setError,
+		control,
 		reset,
 	} = useForm({ mode: 'all' })
 
@@ -40,28 +41,12 @@ const ProductForm: React.FC = () => {
 		'',
 		'',
 	])
-	const {variations, setVariationType, setVariationTypesList, setVariations, variationTypesList} = useVariationContext()
+	const {variations, variationTypesList, resetVariations} = useVariationContext()
 
 
 	const handleMainImageUpload = (url: string) => {
 		setMainImageUrl(url)
 	}
-	// const handleCategoryChange = (
-	// 	selectedOption: SingleValue<{
-	// 		label: string
-	// 		value: string
-	// 		id: string
-	// 	}>
-	// ) => {
-	// 	if (selectedOption) {
-	// 		setValue('category', selectedOption.id)
-	// 	} else {
-	// 		setError('category', {
-	// 			type: 'manual',
-	// 			message: 'Please select a category', // Set the error message
-	// 		})
-	// 	}
-	// }
 	const handleDescriptionChange = (content: string) => {
 		setValue('description', content)
 	}
@@ -80,11 +65,7 @@ const ProductForm: React.FC = () => {
 		newOptionalImagesUrls[index] = ''
 		setOptionalImagesUrls(newOptionalImagesUrls)
 	}
-	const handleCategorySelect = (id: string) => {
-		setValue('category', id)
-		// You can now use this ID in your form submission or other logic
-		console.log("Selected Category ID:", id)
-	}
+	
 	useEffect(() => {
 		if (resetImageUpload) {
 			setResetImageUpload(false) // Clear reset state after triggering reset
@@ -106,13 +87,12 @@ const ProductForm: React.FC = () => {
 				variations: variations,
 				variationTypes: variationTypesList
 			}
+			console.log(finalProductData)
 			await addProduct(finalProductData)
 			setResetImageUpload(true)
 			setMainImageUrl('')
 				setOptionalImagesUrls(['', '', ''])
-				setVariationType([])
-				setVariationTypesList({})
-				setVariations([])
+				resetVariations()
 				reset()
 
 		} catch (error) {
@@ -215,9 +195,17 @@ const ProductForm: React.FC = () => {
 									<label className="mb-3 block text-black dark:text-white">
 										Category
 									</label>
-									<CategorySelect
-										onCategorySelect={handleCategorySelect}
-									/>
+									<Controller
+				name="category"
+				control={control}
+				rules={{ required: 'Category is required' }}
+				render={({ field }) => (
+					<CategorySelect
+						onCategorySelect={(id) => field.onChange(id)}
+					/>
+				)}
+			/>
+									
 									{typeof errors.category?.message ===
 										'string' && (
 										<span className="text-red-600">
@@ -233,14 +221,23 @@ const ProductForm: React.FC = () => {
 										</label>
 										<input
 											type="number"
+											 step="0.01"
 											{...register('lowerPrice', {
 												required:
 													'Lower price is required',
 												valueAsNumber: true,
+												min: {
+													value: 0,
+													message: 'Price must be at least 0',
+												  },
+												  max: {
+													value: 10000,
+													message: 'Price must be less than or equal to 10000',
+												  },
 											})}
-											required
-											min={0}
-											max={10000}
+											
+											
+											
 											placeholder="Lower Price"
 											className={`w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary ${
 												errors.lowerPrice
@@ -261,21 +258,28 @@ const ProductForm: React.FC = () => {
 										</label>
 										<input
 											type="number"
+											step="0.01"
 											{...register('upperPrice', {
 												required:
 													'Upper price is required',
 
 												valueAsNumber: true,
+												min: {
+													value: 0,
+													message: 'Price must be at least 0',
+												  },
+												  max: {
+													value: 10000,
+													message: 'Price must be less than or equal to 10000',
+												  },
 												validate: (value) =>
 													parseFloat(
 														watch('lowerPrice')
 													) <= parseFloat(value) ||
 													'Upper price must be greater than lower price',
 											})}
-											required
+										
 											placeholder="Upper Price"
-											min={10}
-											max={10000}
 											className={`w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary ${
 												errors.upperPrice
 													? 'border-red-500'
@@ -299,7 +303,7 @@ const ProductForm: React.FC = () => {
 										onDelete={handleDeleteMainImage}
 										reset={resetImageUpload}
 									/>
-									{optionalImagesUrls.map((url, index) => (
+									{optionalImagesUrls.map((_, index) => (
 										<ImageUpload
 											key={index}
 											title={`Optional Image ${

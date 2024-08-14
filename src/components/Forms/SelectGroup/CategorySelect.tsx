@@ -288,11 +288,14 @@
 
 // export default CategorySelect
 import React, { useEffect, useState } from 'react'
+import _ from 'lodash'
 import SearchIcon from '@mui/icons-material/Search'
 import CloseIcon from '@mui/icons-material/Close'
 import { db } from '../../../services/firebase'
 import { collection, query, where, onSnapshot, addDoc } from 'firebase/firestore'
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from '@mui/material'
+import ImageUpload from '../../ImageUpload/ImageUpload'
+import { toast } from 'react-toastify'
 
 interface CategorySelectProps {
 	onCategorySelect: (id: string) => void; // Callback to pass selected document ID to parent
@@ -313,55 +316,38 @@ const CategorySelect: React.FC<CategorySelectProps> = ({ onCategorySelect }) => 
 		setShowDropdown(true) // Show the dropdown when user types
 	}
 
-	// const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-	// 	if (selectedItem < searchData.length) {
-	// 		if (e.key === 'ArrowUp' && selectedItem > 0) {
-	// 			setSelectedItem((prev) => prev - 1)
-	// 		} else if (e.key === 'ArrowDown' && selectedItem < searchData.length - 1) {
-	// 			setSelectedItem((prev) => prev + 1)
-	// 		} else if (e.key === 'Enter' && selectedItem >= 0) {
-	// 			e.preventDefault()
-	// 			const selectedCategory = searchData[selectedItem]
-	// 			setSearch(selectedCategory.name)
-	// 			setShowDropdown(false) // Hide the dropdown after selecting
-	// 			setSearchData([])  // Clear the dropdown data
-	// 			setSelectedItem(-1)
-	// 			onCategorySelect(selectedCategory.id)
-	// 		}
-	// 	} else {
-	// 		setSelectedItem(-1)
-	// 	}
-	// }
-
 	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-		if (e.key === 'Enter') {
-			e.preventDefault()
-			if (selectedItem >= 0 && selectedItem < searchData.length) {
-				const selectedCategory = searchData[selectedItem]
-				setSearch(selectedCategory.name)
-				setShowDropdown(false) // Hide the dropdown after selecting
-				setSearchData([])  // Clear the dropdown data
-				setSelectedItem(-1)
-				onCategorySelect(selectedCategory.id)
+		if (e.key === 'Enter' || e.key === ' ') {
+			e.preventDefault();
+			if (searchData.length === 0 && search !== '') {
+				// No items in dropdown and user presses Enter or Space - open the modal
+				handleModalOpen();
+			} else if (selectedItem >= 0 && selectedItem < searchData.length) {
+				const selectedCategory = searchData[selectedItem];
+				setSearch(selectedCategory.name);
+				setShowDropdown(false);
+				setSearchData([]);
+				setSelectedItem(-1);
+				onCategorySelect(selectedCategory.id);
 			} else if (searchData.length > 0) {
-				// Select the first item if no item is currently selected
-				const firstCategory = searchData[0]
-				setSearch(firstCategory.name)
-				setShowDropdown(false) // Hide the dropdown after selecting
-				setSearchData([])  // Clear the dropdown data
-				setSelectedItem(-1)
-				onCategorySelect(firstCategory.id)
+				const firstCategory = searchData[0];
+				setSearch(firstCategory.name);
+				setShowDropdown(false);
+				setSearchData([]);
+				setSelectedItem(-1);
+				onCategorySelect(firstCategory.id);
 			}
 		} else if (selectedItem < searchData.length) {
 			if (e.key === 'ArrowUp' && selectedItem > 0) {
-				setSelectedItem((prev) => prev - 1)
+				setSelectedItem((prev) => prev - 1);
 			} else if (e.key === 'ArrowDown' && selectedItem < searchData.length - 1) {
-				setSelectedItem((prev) => prev + 1)
+				setSelectedItem((prev) => prev + 1);
 			}
 		} else {
-			setSelectedItem(-1)
+			setSelectedItem(-1);
 		}
-	}
+	};
+	
 
 	const handleItemClick = (index: number) => {
 		const selectedCategory = searchData[index]
@@ -392,7 +378,15 @@ const CategorySelect: React.FC<CategorySelectProps> = ({ onCategorySelect }) => 
 
 	const handleCreateCategory = async () => {
 		if (newCategoryName.trim() === '') {
-			alert('Category name is required')
+			toast.error('Category name is required')
+			return
+		}
+		if (newCategoryDescription.trim() === ''){
+			toast.error('Category description required.')
+			return
+		}
+		if (newCategoryImage.trim()=== ''){
+			toast.error('Category image required.')
 			return
 		}
 
@@ -495,24 +489,28 @@ const CategorySelect: React.FC<CategorySelectProps> = ({ onCategorySelect }) => 
 			<Dialog open={showModal} onClose={handleModalClose}>
 				<DialogTitle>Create New Category</DialogTitle>
 				<DialogContent>
+					<ImageUpload title='category image' reset={false} mandatory={true} onUploadComplete={(url:string)=>{setNewCategoryImage(url)}} onDelete={()=>{setNewCategoryImage('')}}/>
 					<TextField
-						autoFocus
+						autoFocus={true}
 						margin="dense"
 						label="Category Name"
 						type="text"
 						fullWidth
+						required
 						value={newCategoryName}
-						onChange={(e) => setNewCategoryName(e.target.value)}
+						onChange={(e) => setNewCategoryName(_.toLower(e.target.value.trim()))}
 					/>
 					<TextField
 						margin="dense"
 						label="Description"
 						type="text"
 						fullWidth
+						required
 						value={newCategoryDescription}
-						onChange={(e) => setNewCategoryDescription(e.target.value)}
+						onChange={(e) => setNewCategoryDescription(_.toLower(e.target.value.trim()))}
 					/>
 					<TextField
+					disabled
 						margin="dense"
 						label="Image URL"
 						type="text"

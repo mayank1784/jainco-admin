@@ -73,8 +73,8 @@ const VariationTable: React.FC<{ mainImage: string }> = ({ mainImage }) => {
 			stock: 0,
 			isAvailable: true,
 			sku: '',
-		}))
-
+		}
+	))
 		setVariations(initialVariations)
 	}, [transformedData, setVariations])
 
