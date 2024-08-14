@@ -1,94 +1,57 @@
-# TailAdmin React - Free React Tailwind Admin Dashboard Template
+# ERP System for Inventory and Catalog Management (Upcoming Project)
 
-TailAdmin is a free and open-source admin dashboard template built on **React and Tailwind CSS**, providing developers with everything they need to create a comprehensive, data-driven back-end, 
-dashboard, or admin panel solution for upcoming web projects.
+## Overview
 
-[![tailwind react admin template](https://ucarecdn.com/d2a6daed-eb9c-4c2f-8a95-4419c450e23a/tailadminreact.jpg)](https://react-demo.tailadmin.com/)
+This project aims to build a comprehensive ERP (Enterprise Resource Planning) system tailored for inventory and catalog management, designed to meet the needs of businesses of all sizes. The system will consist of a responsive web application and a mobile app, enabling users to manage their inventory and catalogs from any device.
 
+## Technologies Used
 
-With TailAdmin, you get access to all the necessary dashboard UI components, elements, and pages required to build a feature-rich and complete dashboard or admin panel. Whether you're building dashboard or admin panel for a complex web application or a simple website, TailAdmin is the perfect solution to help you get up and running quickly.
+- **React.js**: For building a responsive and interactive web application.
+- **Firebase**: For real-time database management, authentication, and secure backend services.
+- **React Native**: For developing a cross-platform mobile application, primarily targeting Android devices.
 
-### [✨ Visit Website](https://tailadmin.com/)
+## Features
 
-### [🚀 PRO Demo](https://react-demo.tailadmin.com/)
-### [🚀 FREE Demo](https://free-react-demo.tailadmin.com/)
+- **Responsive Web Application**: A user-friendly interface built with React.js that adapts seamlessly across various devices.
+- **Real-Time Database**: Utilizing Firebase to manage data efficiently and provide real-time updates across the system.
+- **Mobile App**: A React Native app that allows users to manage their inventory and catalogs on the go.
+- **Scalability and Performance**: The system is designed to handle large datasets and support multiple concurrent users.
 
-### TailAdmin React PRO vs TailAdmin React FREE Comparison 📊
+## Screenshots
 
-#### [TailAdmin React PRO](https://react-demo.tailadmin.com/)
-- 4 Unique Dashboards: Analytics, Ecommerce, Marketing, and CRM (More will be added)
-- 120+ Dashboard UI Components
-- 200+ Total UI Elements
-- 45+ HTML Files
-- All Essential Elements and Files
-- Full Figma Design Source - As Shown on Demo
+### Web Application (Admin Panel)
 
-___
+![Admin Panel Screenshot](admin_panel.png)
 
-#### [TailAdmin React FREE](https://free-react-demo.tailadmin.com/)
-- 1 Unique Dashboard
-- 30+ Dashboard UI Components
-- 50+ Total UI Elements 
-- 10+ HTML Files
-- TypeScript Support
-- Basic UI Kit Elements and Files
-- Figma Design Source - Free Sample
-___
+### Mobile Application
 
-### [⬇️ Download Now](https://tailadmin.com/download)
+![Mobile App Screenshot](app_home.png)
 
-### [⚡ Get PRO Version](https://tailadmin.com/pricing)
+![Mobile App Screenshot](app_product.png)
 
-### [📄 Documentation/Installation](https://tailadmin.com/docs)
+> **Note:** These screenshots are placeholders. Actual screenshots will be added as the project progresses.
 
-### [🖌️ TailAdmin Figma Free Sample](https://www.figma.com/community/file/1214477970819985778)
+## Source Code
+ 
+ - **App source code**: [Code](https://github.com/mayank1784/jainco-app)
 
-### [👉 TailAdmin HTML Version](https://github.com/TailAdmin/tailadmin-free-tailwind-dashboard-template)
+The source code for this project will be made available on GitHub. Stay tuned for updates!
 
-TailAdmin React dashboard template based on Tailwind CSS is a pre-designed starting point for building a web-based dashboard using the React JavaScript library and the Tailwind CSS utility-first framework. This Tailwind CSS + React Dashboard Template - built using Tailwind CSS and **includes pre-built components, such as navigation menus, charts, tables, and forms, which can be easily customized and integrated into a small-to-large React web application**.
+## Upcoming Features
 
-If you're looking for a high-quality **React-Tailwind Dashboard, Admin Panel Template, or UI Kit**, TailAdmin will be the perfect choice for you!
+- **Advanced Analytics and Reporting**: Integrate tools to generate detailed reports and analytics.
+- **User Roles and Permissions**: Implement role-based access control to enhance security.
+- **Offline Capabilities**: Add offline support for the mobile app to allow users to work without an active internet connection.
 
-## TailAdmin React - Installation
+## Contributing
 
-You'll need to install Node.js >=v14.16+ (Recommended Version) (NPM comes along with it) and TailAdmin uses **Vite** for frontend tooling, to peform installation and building production version, please follow these steps from below:
+We welcome contributions to this project. If you're interested in contributing, please refer to our contribution guidelines (to be added soon).
 
-- Use terminal and navigate to the project (tailadmin-react) root.
+## License
 
-- Then run : <code>npm install</code>
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-- Then run : <code>npm run dev</code>
+---
 
-Now, in the browser go to <code>localhost:5173</code>
+Stay updated with the latest progress by following the project on [GitHub](#).
 
-**For Production Build**
-Run : <code>npm run build</code>
-
-Default build output directory: /dist
-
-This command will generate a dist as build folder in the root of your template that you can upload to your server.
-
-## Tons of React Tailwind Components for Dashboard
-React and Tailwind are two popular technologies that have taken the web development world by storm. React is a JavaScript library for building user interfaces, while Tailwind is a utility-first CSS framework that makes it easy to style web applications. TailAdmin React Offers 200+ Essential React + Tailwind CSS UI Components that you copy-paste and use with your dashboard projects. That includes - charts, graphs, navbars, tabs, buttons, cards, tables, profile, tabs, forms, modals, app pages, calender, web apps example templates and more... for React and Styled using Tailwind CSS
-
-
-
-## Update Logs
-
-### Version 1.0.6 - [Jan 31, 2024]
-
-#### Enhancements
-
-- **Enhancement 01:** Integrate flatpickr in [Date Picker/Form Elements]
-- **Enhancement 02:** Change color after select an option [Select Element/Form Elements].
-- **Enhancement 03:** Make it functional [Multiselect Dropdown/Form Elements].
-- **Enhancement 04:** Make best value editable [Pricing Table One/Pricing Table].
-- **Enhancement 05:** Rearrange Folder structure.
-
-### Version 1.0.0 - [Apr 28, 2023]
-
-- Add Typescript in TailAdmin React.
-
-### Version 1.0.0 - Initial Release - [Mar 13, 2023]
-
-- Initial release of TailAdmin React.
